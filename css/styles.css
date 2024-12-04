@@ -1,0 +1,54 @@
+.rating-wrapper {
+  align-self: center;
+  box-shadow: 7px 7px 25px rgba(198, 206, 237, 0.7),
+    -7px -7px 35px rgba(255, 255, 255, 0.7),
+    inset 0px 0px 4px rgba(255, 255, 255, 0.9),
+    inset 7px 7px 15px rgba(198, 206, 237, 0.8);
+  border-radius: 5rem;
+  display: inline-flex;
+  direction: rtl !important;
+  padding: 0.5rem 1rem; /* Ajustado */
+  margin-left: auto;
+}
+
+.rating-wrapper label {
+  color: #e1e6f6;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 2rem; /* Ajustado */
+  padding: 0.2rem 0.2rem; /* Ajustado */
+  transition: color 0.5s;
+}
+
+.rating-wrapper input {
+  display: none; /* Oculta los inputs */
+}
+
+.rating-wrapper label:hover,
+.rating-wrapper label:hover ~ label,
+.rating-wrapper input:checked ~ label {
+  color: #34ac9e;
+}
+
+.star {
+  font-size: 24px;
+  color: #000000;
+  cursor: pointer;
+}
+
+input[type="radio"]:checked + .star {
+  color: #f39c12;
+}
+
+.custom-btn-group {
+  display: flex;
+  justify-content: center; /* Centers the buttons horizontally */
+  gap: 0.2rem; /* Adds some space between the buttons */
+  width: 100%; /* Make the group take up the full width of the parent */
+}
+
+.custom-btn-group .btn {
+  flex: 0 1 auto; /* Prevent buttons from growing or shrinking, allowing them to take only necessary space */
+  white-space: nowrap; /* Prevents text from breaking and ensures it's on a single line */
+  min-width: 0; /* Prevents overflowing text */
+}

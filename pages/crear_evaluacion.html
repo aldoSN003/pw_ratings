@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agregar Nueva Evaluación</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/styles.css" />
+
+    <script src="../js/agregar_evaluacion.js" defer></script>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center">Agregar Nueva Evaluación</h1>
+      <form id="form-agregar-evaluacion" class="mt-4">
+        <!-- Tabla para los datos principales -->
+        <table class="table table-bordered table-striped">
+          <tbody>
+            <tr>
+              <td>
+                <label for="id" class="form-label">ID de Evaluación</label>
+              </td>
+              <td>
+                <input type="text" id="id" class="form-control" required />
+              </td>
+            </tr>
+            <tr>
+              <td><label for="idM" class="form-label">ID de Módulo</label></td>
+              <td>
+                <input type="text" id="idM" class="form-control" required />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="nControl" class="form-label"
+                  >Número de Control</label
+                >
+              </td>
+              <td>
+                <input
+                  type="text"
+                  id="nControl"
+                  class="form-control"
+                  required
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="fechaHora" class="form-label">Fecha y Hora</label>
+              </td>
+              <td>
+                <input
+                  type="datetime-local"
+                  id="fechaHora"
+                  class="form-control"
+                  required
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Evaluaciones (ratings) -->
+        <h3 class="mt-4">Evaluaciones</h3>
+        <table class="table table-bordered table-striped">
+          <tbody>
+            <tr>
+              <td><label class="form-label">Aire Acondicionado</label></td>
+              <td><div class="rating-wrapper" id="aireAcondicionado"></div></td>
+            </tr>
+            <tr>
+              <td><label class="form-label">Atención del Personal</label></td>
+              <td>
+                <div class="rating-wrapper" id="atenciondelPersonal"></div>
+              </td>
+            </tr>
+            <tr>
+              <td><label class="form-label">Computadoras</label></td>
+              <td><div class="rating-wrapper" id="computadoras"></div></td>
+            </tr>
+            <tr>
+              <td><label class="form-label">Evaluación Global</label></td>
+              <td><div class="rating-wrapper" id="evaluacionGlobal"></div></td>
+            </tr>
+            <tr>
+              <td><label class="form-label">Iluminación</label></td>
+              <td><div class="rating-wrapper" id="iluminacion"></div></td>
+            </tr>
+            <tr>
+              <td><label class="form-label">Limpieza Área</label></td>
+              <td><div class="rating-wrapper" id="limpiezaArea"></div></td>
+            </tr>
+            <tr>
+              <td><label class="form-label">Limpieza Equipos</label></td>
+              <td><div class="rating-wrapper" id="limpiezaEquipos"></div></td>
+            </tr>
+            <tr>
+              <td><label class="form-label">Red Internet</label></td>
+              <td><div class="rating-wrapper" id="redInternet"></div></td>
+            </tr>
+            <tr>
+              <td><label class="form-label">SW Práctica</label></td>
+              <td><div class="rating-wrapper" id="swPractica"></div></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Botones de acción -->
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="window.history.back();"
+          >
+            Regresar
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("form-agregar-evaluacion");
+
+        const createStarRating = (id) => {
+          const wrapper = document.getElementById(id);
+          for (let i = 1; i <= 5; i++) {
+            const input = document.createElement("input");
+            input.type = "radio";
+            input.id = `${id}-${i}`;
+            input.name = id;
+            input.value = i;
+            const label = document.createElement("label");
+            label.setAttribute("for", `${id}-${i}`);
+            label.innerHTML = "&#9733;"; // Star character
+            wrapper.appendChild(input);
+            wrapper.appendChild(label);
+          }
+        };
+
+        const ratingIds = [
+          "aireAcondicionado",
+          "atenciondelPersonal",
+          "computadoras",
+          "evaluacionGlobal",
+          "iluminacion",
+          "limpiezaArea",
+          "limpiezaEquipos",
+          "redInternet",
+          "swPractica",
+        ];
+
+        ratingIds.forEach(createStarRating);
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+
+          const id = document.getElementById("id").value;
+          const idM = document.getElementById("idM").value;
+          const nControl = document.getElementById("nControl").value;
+          const fechaHora = document
+            .getElementById("fechaHora")
+            .value.replace("T", "-");
+
+          const data = {
+            [id]: {
+              evaluacion: {},
+              fechaHora,
+              idM,
+              nControl,
+            },
+          };
+
+          ratingIds.forEach((ratingId) => {
+            const selectedRating = document.querySelector(
+              `input[name="${ratingId}"]:checked`
+            );
+            if (selectedRating) {
+              data[id].evaluacion[ratingId] = selectedRating.value;
+            }
+          });
+
+          const url =
+            "https://encuesta-servicios-aldo-default-rtdb.firebaseio.com/evaluaciones22024.json";
+
+          fetch(url, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => {
+              if (response.ok) {
+                alert("Evaluación agregada exitosamente");
+                form.reset();
+                
+
+
+
+              } else {
+                throw new Error("Error al agregar la evaluación");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Error al agregar la evaluación");
+            });
+        });
+      });
+    </script>
+  </body>
+</html>
